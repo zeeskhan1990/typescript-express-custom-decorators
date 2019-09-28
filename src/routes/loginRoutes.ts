@@ -1,6 +1,9 @@
 import {Router, Request, Response, NextFunction} from "express"
 
 interface RequestWithBody extends Request {
+    /* The type-def file is wrong in assuming that body property would be present when it's only
+    there when the body parser middleware is used. Should have been even if body was declared 
+    - body: {[key: string]: string | undefined}; */
     body: {[key: string]: string | undefined}
 }
 
@@ -14,42 +17,8 @@ const passAuth = (req: Request, res: Response, next: NextFunction):void => {
 }
 
 const router = Router()
-
-router.get('/login', (req: Request, res: Response) => {
-    res.send(`
-      <form method="POST">
-        <div>
-          <label>Email</label>
-          <input name="email" />
-        </div>
-        <div>
-          <label>Password</label>
-          <input name="password" type="password" />
-        </div>
-        <button>Submit</button>
-      </form>
-    `);
-  });
   
-  router.post('/login', (req: RequestWithBody, res: Response) => {
-    /* The type def file is wrong assuming that body property would be present when it's only
-    there when the body parser middleware is used. Should have been even if body was declared 
-    - body: {[key: string]: string | undefined}; */
-    const { email, password } = req.body;
-
-   /*  if(email) {
-        res.send(email.toUpperCase());
-    } else {
-        res.send("You must provide an email")
-    } */
-
-    if(email && password && email==="my@my.com" && password === "password") {
-        req.session = {loggedIn: true}
-        res.redirect('/')
-    } else {
-        res.send('Input my@my.com & password');
-      }
-  });
+  
 
   router.get('/', (req: Request, res: Response) => {
     if (req.session && req.session.loggedIn) {
