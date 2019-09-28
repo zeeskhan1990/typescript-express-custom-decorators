@@ -33,6 +33,12 @@ class LoginController {
         res.send('Input my@my.com & password');
     }
   }
+
+  @get('logout')
+  getLogout(req: Request, res: Response) {
+    req.session = undefined;
+    res.redirect('/');
+  }
 }
 
 function uselessLogger(req: Request, res: Response, next: NextFunction) {
